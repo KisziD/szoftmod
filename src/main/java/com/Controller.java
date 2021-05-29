@@ -1,6 +1,6 @@
 package com;
 
-import java.io.File;
+//import java.io.File;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -59,7 +59,7 @@ public class Controller {
 
         try {
             if (desired + (desired * 0.2) < current || desired - (desired * 0.2) > current) {
-                PrintWriter pw = new PrintWriter(new File("resources/log.txt"));
+                PrintWriter pw = new PrintWriter("resources/log.txt");
                 pw.write(LocalDateTime.now().toString()+"   Error: homeId: "+homeId+"    Temps: Desired: "+desired+" Measured: "+current);
                 pw.close();
             }
@@ -76,8 +76,9 @@ public class Controller {
         }
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private int setBoiler(int tempChange, boolean boilerState){
-        if(tempChange==0 && boilerState){
+        if(0 ==tempChange&& boilerState){
             return -1;
         }else if(tempChange==-1 && boilerState){
             return -1;
@@ -87,7 +88,7 @@ public class Controller {
             return 0;
         }
     }
-
+    @SuppressWarnings("DuplicatedCode")
     private int setAc(int tempChange, boolean acState){
         if(tempChange==0 && acState){
             return -1;
