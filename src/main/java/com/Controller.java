@@ -17,36 +17,38 @@ public class Controller {
 
         for (Subscriber sub: subs.getSubscribers()) {
             for (Temperature temp: sub.getTemperatures()) {
-                if(hour>=temp.getBeginTime() && hour<temp.getEndTime()){
-                    sess = m.getSession(sub.getHomeId());
-                    tempChange = checkTemp(temp.getTemperature(), sess.getTemperature(), sub.getHomeId());
-                    ac=setAc(tempChange,sess.getAirConditionerState());
-                    boiler=setBoiler(tempChange,sess.getBoilerState());
+                if(hour>=temp.getBeginTime() && hour<temp.getEndTime()) {
+                        sess = m.getSession(sub.getHomeId());
+                    if (!Objects.isNull(sess)) {
+                        tempChange = checkTemp(temp.getTemperature(), sess.getTemperature(), sub.getHomeId());
+                        ac = setAc(tempChange, sess.getAirConditionerState());
+                        boiler = setBoiler(tempChange, sess.getBoilerState());
 
-                    if(ac!=0||boiler!=0) {
-                        switch (ac) {
-                            case 1:
-                                acState = true;
-                                break;
-                            case 0:
-                                acState = sess.getAirConditionerState();
-                                break;
-                            case -1:
-                                acState = false;
-                                break;
+                        if (ac != 0 || boiler != 0) {
+                            switch (ac) {
+                                case 1:
+                                    acState = true;
+                                    break;
+                                case 0:
+                                    acState = sess.getAirConditionerState();
+                                    break;
+                                case -1:
+                                    acState = false;
+                                    break;
+                            }
+                            switch (boiler) {
+                                case 1:
+                                    boilerState = true;
+                                    break;
+                                case 0:
+                                    boilerState = sess.getBoilerState();
+                                    break;
+                                case -1:
+                                    boilerState = false;
+                                    break;
+                            }
+                            System.out.println(new Driver().sendCommand(sub, boilerState, acState));
                         }
-                        switch (boiler) {
-                            case 1:
-                                boilerState = true;
-                                break;
-                            case 0:
-                                boilerState = sess.getBoilerState();
-                                break;
-                            case -1:
-                                boilerState = false;
-                                break;
-                        }
-                        System.out.println(new Driver().sendCommand(sub, boilerState, acState));
                     }
                 }
             }
